@@ -1598,6 +1598,7 @@
 
             if (!isCombinationAllowed(username, codeword)) {
                 document.getElementById("uniqueCode").innerText = "您不在允许列表内。";
+                document.getElementById("information").style.display = "none";
                 return;
             }
             document.getElementById("uniqueCode").innerText = "";
