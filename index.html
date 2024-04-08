@@ -1,18 +1,94 @@
-<form action="https://formspree.io/f/xyyrbzrw" method="POST">
-    <label for="name">Your Name:</label>
-    <input type="text" id="name" name="name" required>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动代码生成器</title>
+</head>
+<body>
+    <h2>活动代码生成器</h2>
+    <label for="username">请输入姓名：</label><br>
+    <input type="text" id="username" name="username"><br>
+    <label for="codeword">请输入身份证号后六位：</label><br>
+    <input type="text" id="codeword" name="codeword"><br><br>
+    <button onclick="generateCode()">登录</button>
+    <p id="uniqueCode"></p>
 
-    <label for="email">Your Email:</label>
-    <input type="email" id="email" name="_replyto" required>
+    <div id="information" style="display: none;">
+        <p>活动信息：xxxxx</p>
+        <button onclick="submitResponse('Accept')">接受</button>
+        <button onclick="submitResponse('Decline')">拒绝</button>
+    </div>
+    
+    <script>
+        // Example of allowed combinations' hashes (pre-computed)
+        const allowedHashes = {
+'JUU2JTlEJThFJUU2JUI1JUE5JUU1JTg2JTg5JTNBMDYyMjQ0': true,
 
-    <label for="message">Your Message:</label>
-    <textarea id="message" name="message" required></textarea>
+            // Add more pre-computed hashes as needed
+        };
+    
+        function generateHash(input) {
+            const encodedInput = btoa(encodeURIComponent(input));
+            console.log(`Encoded Input: ${encodedInput}`); // Debugging line
+            return encodedInput;
+        }
+        
+        function isCombinationAllowed(name, codeword) {
+            const combinedInput = name + ':' + codeword;
+            const hashOfCombination = generateHash(combinedInput);
+            console.log(`Hash of Combination: ${hashOfCombination}`); // Debugging line
+            return !!allowedHashes[hashOfCombination];
+        }
 
-    <!-- This field is used to ensure the request came from your website -->
-    <input type="hidden" name="_subject" value="New submission!">
+        
+    
+        function generateCode() {
+            const username = document.getElementById("username").value;
+            let codeword = document.getElementById("codeword").value;
+            if (codeword.slice(-1).toLowerCase() === 'x') {
+                codeword = codeword.slice(0, -1) + 'X';
+            }
 
-    <!-- The next line is for spam filtering, leave it blank -->
-    <input type="text" name="_gotcha" style="display:none">
+            if (!isCombinationAllowed(username, codeword)) {
+                document.getElementById("uniqueCode").innerText = "您不在允许列表内。";
+                return;
+            }
 
-    <button type="submit">Send</button>
-</form>
+            document.getElementById("information").style.display = "block";
+        }
+        
+        function submitResponse(response) {
+            const username = document.getElementById("username").value;
+            const codeword = document.getElementById("codeword").value;
+            
+            // Prepare data for submission
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append("codeword", codeword);
+            formData.append("response", response);
+        
+            // Use fetch to submit the form data to Formspree
+            fetch("https://formspree.io/f/xyyrbzrw", { // Replace "yourFormId" with your actual Formspree form ID
+                method: "POST",
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Handle success, such as showing a thank-you message
+                    alert("Thank you for your response!");
+                } else {
+                    // Handle error
+                    alert("There was a problem with your submission.");
+                }
+            });
+        
+            // Optionally hide the information and buttons after submission
+            document.getElementById("information").style.display = "none";
+        }
+    </script>
+</body>
+</html>
