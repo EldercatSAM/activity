@@ -43,23 +43,57 @@
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             const image = new Image();
-
-            // Replace this URL with the actual URL of your image in the GitHub repository
-            image.src = 'https://raw.githubusercontent.com/EldercatSAM/activity/main/ori_image.png';
-            image.crossOrigin = 'Anonymous';
+        
+            // Corrected URL for the image
+            image.src = 'https://raw.githubusercontent.com/EldercatSAM/activity/main/shrinked_image.png';
+            image.crossOrigin = 'Anonymous'; // This might be needed for CORS if you're loading from another domain
+        
             image.onload = function() {
                 canvas.width = image.width;
                 canvas.height = image.height;
                 ctx.drawImage(image, 0, 0);
-                const fontSize = canvas.width / 20;
+                const fontSize = canvas.width / 30; // Adjust the font size if needed
                 ctx.font = `${fontSize}px Arial`;
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                ctx.fillText(name, 10, canvas.height - 10); // Change position as needed
-
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; // Adjust color and opacity as needed
+        
+                // Calculate spacing for the watermarks
+                const textWidth = ctx.measureText(name).width;
+                const textHeight = fontSize * 1.5; // Rough estimate of height based on font size
+                const spacingX = textWidth * 1.5; // Horizontal spacing between each watermark
+                const spacingY = textHeight * 3; // Vertical spacing between each watermark
+        
+                for (let x = 0; x < canvas.width; x += spacingX) {
+                    for (let y = 0; y < canvas.height; y += spacingY) {
+                        ctx.fillText(name, x, y);
+                    }
+                }
+        
                 document.getElementById('watermarkedImage').src = canvas.toDataURL('image/png');
                 document.getElementById('watermarkedImage').style.display = 'block';
             };
         }
+
+        // function addWatermark(name) {
+        //     const canvas = document.createElement('canvas');
+        //     const ctx = canvas.getContext('2d');
+        //     const image = new Image();
+
+        //     // Replace this URL with the actual URL of your image in the GitHub repository
+        //     image.src = 'https://raw.githubusercontent.com/EldercatSAM/activity/main/shrinked_image.png';
+        //     image.crossOrigin = 'Anonymous';
+        //     image.onload = function() {
+        //         canvas.width = image.width;
+        //         canvas.height = image.height;
+        //         ctx.drawImage(image, 0, 0);
+        //         const fontSize = canvas.width / 20;
+        //         ctx.font = `${fontSize}px Arial`;
+        //         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        //         ctx.fillText(name, 10, canvas.height - 10); // Change position as needed
+
+        //         document.getElementById('watermarkedImage').src = canvas.toDataURL('image/png');
+        //         document.getElementById('watermarkedImage').style.display = 'block';
+        //     };
+        // }
     
         function generateHash(input) {
             const encodedInput = btoa(encodeURIComponent(input));
