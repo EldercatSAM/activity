@@ -15,7 +15,10 @@
     <p id="uniqueCode"></p>
 
     <div id="information" style="display: none;">
-        <p>活动信息：xxxxx</p>
+        <p>活动信息：xxxxx
+        请您确认是否参加：
+        备注：是否参加可以多次选择，以最后一次提交结果为准，但重复提交超过10次将不被接受。
+        </p>
         <button onclick="submitResponse('Accept')">接受</button>
         <button onclick="submitResponse('Decline')">拒绝</button>
     </div>
@@ -54,7 +57,7 @@
                 document.getElementById("uniqueCode").innerText = "您不在允许列表内。";
                 return;
             }
-
+            document.getElementById("uniqueCode").innerText = "";
             document.getElementById("information").style.display = "block";
         }
         
@@ -79,10 +82,10 @@
             .then(response => {
                 if (response.ok) {
                     // Handle success, such as showing a thank-you message
-                    alert("Thank you for your response!");
+                    alert("您的选择已成功提交！");
                 } else {
                     // Handle error
-                    alert("There was a problem with your submission.");
+                    alert("您的提交遇到了一些问题，请联系工作人员。");
                 }
             });
         
