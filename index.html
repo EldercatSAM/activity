@@ -120,7 +120,8 @@
             }
 
             if (!isCombinationAllowed(username, codeword)) {
-                document.getElementById("uniqueCode").innerText = "您不在允许列表内。";
+                // document.getElementById("uniqueCode").innerText = "您不在允许列表内。";
+                document.getElementById("uniqueCode").innerText = "目前未到允许查询时间。";
                 document.getElementById("information").style.display = "none";
                 return;
             }
